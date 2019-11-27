@@ -1,0 +1,9 @@
+const {h} = window.superfine
+const el_main = document.querySelector('main')
+
+const render_app = view => ::
+  render_app._vnode = superfine.patch @
+    render_app._vnode, view, el_main
+
+render_app @
+  h @ 'h1', {}, 'Hello from JSY and Parcel!'
