@@ -1,0 +1,8 @@
+cjs/
+esm/
+umd/
+dist/
+.parcel-cache/
+.cache/
+node-modules/
+package-lock.json

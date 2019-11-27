@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang='en'>
+<head>
+  <meta charset='utf-8' />
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <title>Minimal Development Sandbox</title>
+
+  <link rel='stylesheet' crossorigin='anonymous' href='https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css' />
+
+  <script crossorigin='anonymous' src='https://cdn.jsdelivr.net/npm/superfine@6.0.1/dist/superfine.min.js'></script>
+</head>
+
+<body>
+<main></main>
+
+<script>
+  'use strict'
+  const {h} = window.superfine
+  const el_main = document.querySelector('main')
+
+  const render_app = view => {
+    render_app._vnode = superfine.patch(
+      render_app._vnode, view, el_main) }
+
+  render_app(h('h1', {}, 'hello there!'))
+</script>
