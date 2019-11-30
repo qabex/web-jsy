@@ -7,3 +7,5 @@ const render_app = view => ::
 
 render_app @
   h @ 'h1', {}, 'Hello from JSY and Parcel!'
+
+console.log @ "YUP again"

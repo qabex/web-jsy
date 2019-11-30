@@ -7,7 +7,9 @@
     "parcel-plugin-jsy": "*"
   },
   "scripts": {
+    "postinstall": "echo 'POST INSTALL' ; npm link parcel-bundler",
     "build": "parcel build index.html",
+    "watch": "parcel watch index.html",
     "serve": "parcel serve index.html",
     "start": "npm -s run serve"
   }

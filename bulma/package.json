@@ -3,11 +3,12 @@
   "version": "0.0.0",
   "dependencies": {},
   "devDependencies": {
-    "parcel-bundler": "^1.x",
     "parcel-plugin-jsy": "*"
   },
   "scripts": {
+    "postinstall": "echo 'POST INSTALL' ; npm link parcel-bundler",
     "build": "parcel build index.html",
+    "watch": "parcel watch index.html",
     "serve": "parcel serve index.html",
     "start": "npm -s run serve"
   }
