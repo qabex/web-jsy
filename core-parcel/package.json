@@ -5,6 +5,9 @@
   "devDependencies": {
     "parcel-plugin-jsy": "*"
   },
+  "browserslist": [
+    "last 1 Chrome versions"
+  ],
   "scripts": {
     "postinstall": "echo 'POST INSTALL' ; npm link parcel-bundler",
     "build": "parcel build index.html",
