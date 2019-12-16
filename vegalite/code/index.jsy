@@ -1,0 +1,29 @@
+const {h} = superfine
+const bind_render_on = node => view => node = superfine.patch @ node, view
+const render_app = bind_render_on @ document.querySelector('main')
+
+const vl_graph = @{}
+  data: @{} url: vegaDatasets['movies.json'].url
+
+  width: 'container',
+  //height: 100,
+
+  transform: @[]
+    @{} density: "IMDB_Rating", bandwidth: 0.3
+
+  mark: "area",
+  encoding: @{}
+    x: @{}
+      field: "value",
+      title: "IMDB Rating",
+      type: "quantitative"
+    y: @{}
+      field: "density",
+      type: "quantitative"
+
+
+render_app @
+  h @ 'vegalite-view', @{}
+    onstart({target}) :: target.renderView(vl_graph)
+    hover: true
+

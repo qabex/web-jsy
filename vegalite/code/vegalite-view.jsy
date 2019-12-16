@@ -1,0 +1,64 @@
+const vega_css = ':host { display: block; width: 100%; }'
+
+class VegaLiteViewBaseElement extends HTMLElement ::
+  constructor() ::
+    super()
+    const shadow = this.attachShadow @: mode: 'open'
+
+    const doc = this.ownerDocument
+    shadow.appendChild @
+      Object.assign @ doc.createElement('style'),
+        @{} innerText: vega_css
+
+    shadow.appendChild @
+      doc.createElement('div')
+
+
+  connectedCallback() ::
+    this.dispatchEvent @ new CustomEvent @ 'start'
+  disconnectedCallback() ::
+    this.dispatchEvent @ new CustomEvent @ 'finish'
+
+  get hover() :: return this.hasAttribute @ 'hover'
+  set hover(v) ::
+    if v :: this.setAttribute @ 'hover', ''
+    else this.removeAttribute @ 'hover'
+
+  get data() :: return this._data
+  set data(data) :: this.renderView @ data
+
+  renderView(data) ::
+    if data ::
+      this._data = data
+    else data = this._data
+
+    const spec = this.spec = vegaLite.compile @ data
+    const {renderer, hover} = this
+    const [_, container] = this.shadowRoot.children
+
+    this.vegaView = new vega.View @
+      vega.parse(spec.spec)
+      @{} renderer, hover, container
+
+    this.vegaView.runAsync()
+
+
+Object.assign @ VegaLiteViewBaseElement.prototype, @{}
+  _data: @{}
+    $schema: 'https://vega.github.io/schema/vega-lite/v4.json'
+    mark: 'point'
+
+
+class VegaLiteViewElement extends VegaLiteViewBaseElement ::
+  get renderer() :: return this.getAttribute @ 'renderer'
+  set renderer(v) :: this.setAttribute @ 'renderer', !! v
+
+class VegaLiteSVGViewElement extends VegaLiteViewBaseElement ::
+  get renderer() :: return 'svg'
+
+class VegaLiteCanvasViewElement extends VegaLiteViewBaseElement ::
+  get renderer() :: return 'canvas'
+
+window.customElements.define @ 'vegalite-view', VegaLiteViewElement
+window.customElements.define @ 'vegalite-svg', VegaLiteSVGViewElement
+window.customElements.define @ 'vegalite-canvas', VegaLiteCanvasViewElement

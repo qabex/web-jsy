@@ -1,0 +1,18 @@
+{
+  "private": true,
+  "version": "0.0.0",
+  "dependencies": {},
+  "devDependencies": {
+    "parcel-plugin-jsy": "*"
+  },
+  "browserslist": [
+    "last 1 Chrome versions"
+  ],
+  "scripts": {
+    "postinstall": "echo 'POST INSTALL' ; npm link parcel-bundler",
+    "build": "parcel build index.html",
+    "watch": "parcel watch index.html",
+    "serve": "parcel serve index.html",
+    "start": "npm -s run serve"
+  }
+}
