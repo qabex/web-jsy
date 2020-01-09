@@ -51,7 +51,7 @@ Object.assign @ VegaLiteViewBaseElement.prototype, @{}
 
 class VegaLiteViewElement extends VegaLiteViewBaseElement ::
   get renderer() :: return this.getAttribute @ 'renderer'
-  set renderer(v) :: this.setAttribute @ 'renderer', !! v
+  set renderer(v) :: this.setAttribute @ 'renderer', v
 
 class VegaLiteSVGViewElement extends VegaLiteViewBaseElement ::
   get renderer() :: return 'svg'
