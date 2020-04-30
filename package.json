@@ -6,7 +6,7 @@
     "parcel": "^1.x",
     "parcel-plugin-jsy": "*",
     "rollup": "^1.x",
-    "rollup-plugin-jsy-lite": "*"
+    "rollup-plugin-jsy": "*"
   },
   "scripts": {}
 }

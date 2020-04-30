@@ -2,17 +2,13 @@
   "private": true,
   "version": "0.0.0",
   "dependencies": {},
-  "devDependencies": {
-    "parcel-plugin-jsy": "*"
-  },
-  "browserslist": [
-    "last 1 Chrome versions"
-  ],
+  "devDependencies": {},
   "scripts": {
-    "postinstall": "echo 'POST INSTALL' ; npm link parcel-bundler",
-    "build": "parcel build index.html",
-    "watch": "parcel watch index.html",
-    "serve": "parcel serve index.html",
-    "start": "npm -s run serve"
+    "start": "qsrv -- index.html ./esm",
+    "clean": "rm -rf ./esm/*",
+    "build": "rollup --config",
+    "watch": "npm -s run build -- --watch",
+    "pretest": "npm -s run build",
+    "test": "true"
   }
 }
