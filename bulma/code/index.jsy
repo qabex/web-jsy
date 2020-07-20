@@ -3,5 +3,5 @@ const bind_render_on = node => view => node = superfine.patch @ node, view
 const render_app = bind_render_on @ document.querySelector('main')
 
 render_app @
-  h @ 'h1', {}, 'Hello from JSY and Parcel!'
+  h @ 'h1', {}, 'Hello from JSY and QSRV!'
 

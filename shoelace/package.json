@@ -4,7 +4,9 @@
   "dependencies": {},
   "devDependencies": {},
   "scripts": {
-    "start": "qsrv -- index.html ./esm",
+    "start": "npx tmex $PWD -rn _cli watch serve",
+    "_cli": "true",
+    "serve": "qsrv -- index.html ./esm",
     "clean": "rm -rf ./esm/*",
     "build": "rollup --config",
     "watch": "npm -s run build -- --watch",
