@@ -1,0 +1,19 @@
+{
+  "private": true,
+  "version": "0.0.0",
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^11.0.1",
+    "qsrv": "^0.1.7",
+    "rollup": "^2.35.1",
+    "rollup-plugin-dgnotify": "^0.1.7",
+    "rollup-plugin-jsy": "^1.7.2"
+  },
+  "scripts": {
+    "serve": "qsrv -- index.html ./esm",
+    "clean": "rm -rf ./esm/*",
+    "build": "rollup --config",
+    "watch": "npm -s run build -- --watch",
+    "pretest": "npm -s run build",
+    "test": "true"
+  }
+}
