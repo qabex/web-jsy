@@ -1,0 +1,7 @@
+cjs/
+esm/
+umd/
+dist/
+.parcel-cache/
+.cache/
+node-modules/
