@@ -34,9 +34,9 @@ function * add_jsy(src_name, opt={}) {
   const input = `code/${src_name}${opt.ext || '.jsy'}`
 
   yield { ..._cfg_, input,
-    output: [{ file: `root/esm/${src_name}.mjs`, format: 'es', sourcemap: true }]}
+    output: [{ file: `root/esm/${src_name}.js`, format: 'es', sourcemap: true }]}
 
   if (_cfg_min_)
     yield { ... _cfg_min_, input,
-      output: [{ file: `root/esm/${src_name}.min.mjs`, format: 'es', sourcemap: false }]}
+      output: [{ file: `root/esm/${src_name}.min.js`, format: 'es', sourcemap: false }]}
 }
