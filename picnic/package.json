@@ -6,7 +6,7 @@
   "scripts": {
     "preserve": "npm -s run build",
     "serve": "qsrv --root ./root -f ./root/index.html -- ./root ./root/esm",
-    "clean": "rm -rf ./esm/*",
+    "clean": "rm -rf ./root/esm/*",
     "build": "rollup --config",
     "watch": "rollup --config --watch",
     "pretest": "npm -s run build",
