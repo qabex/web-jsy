@@ -1,14 +1,28 @@
 {
   "private": true,
   "version": "0.0.0",
+  "files": [
+    "code/",
+    "cjs/",
+    "esm/"
+  ],
+  "type": "module",
+  "exports": {
+    "./esm/*": "./esm/*",
+    ".": "./esm/index.mjs"
+  },
+  "workspaces": [],
   "dependencies": {},
   "devDependencies": {},
   "scripts": {
+    "clean": "rm -rf ./root/esm/* ./esm/* ./umd/*",
     "preserve": "npm -s run build",
     "serve": "qsrv --root ./root -f ./root/index.html -- ./root ./root/esm",
-    "clean": "rm -rf ./root/esm/*",
+    "prebuild": "test -d ./node_modules || npm ci",
     "build": "rollup --config",
     "watch": "rollup --config --watch",
+    "prestart": "npm -s run build",
+    "start": "watchexec @.watchexec -w ./esm -- node --enable-source-maps ./esm/server.mjs",
     "pretest": "npm -s run build",
     "test": "true"
   }

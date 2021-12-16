@@ -2,7 +2,6 @@ import {builtinModules} from 'module'
 import rpi_jsy from 'rollup-plugin-jsy'
 import rpi_dgnotify from 'rollup-plugin-dgnotify'
 import rpi_resolve from '@rollup/plugin-node-resolve'
-// import rpi_commonjs from '@rollup/plugin-commonjs'
 // import { terser as rpi_terser } from 'rollup-plugin-terser'
 
 
@@ -10,12 +9,14 @@ const _rpis_ = (defines, ...args) => [
   rpi_jsy({defines}),
   rpi_resolve(),
   ...args,
-  // rpi_commonjs(), // Allow CommonJS use -- https://github.com/rollup/plugins/tree/master/packages/commonjs#readme
   rpi_dgnotify()]
 
 
 const _cfg_ = {
-  external: id => /^\w+:/.test(id) || builtinModules.includes(id),
+  external: id => (
+       /^\w+:/.test(id)
+    || builtinModules.includes(id)
+    ),
   plugins: _rpis_({}) }
 
 
@@ -33,10 +34,16 @@ export default [
 function * add_jsy(src_name, opt={}) {
   const input = `code/${src_name}${opt.ext || '.jsy'}`
 
-  yield { ..._cfg_, input,
-    output: [{ file: `root/esm/${src_name}.js`, format: 'es', sourcemap: true }]}
+  yield { ..._cfg_, input, output: [
+      { file: `root/esm/${src_name}.js`, format: 'es', sourcemap: true },
+      //{ file: `esm/${src_name}.js`, format: 'es', sourcemap: true },
+      //{ file: `umd/${src_name}.js`, format: 'umd', name: opt.name || src_name, sourcemap: true },
+    ].filter(Boolean)}
 
   if (_cfg_min_)
-    yield { ... _cfg_min_, input,
-      output: [{ file: `root/esm/${src_name}.min.js`, format: 'es', sourcemap: false }]}
+    yield { ... _cfg_min_, input, output: [
+        { file: `root/esm/${src_name}.min.js`, format: 'es', sourcemap: false },
+        //{ file: `esm/${src_name}.min.js`, format: 'es', sourcemap: false },
+        //{ file: `umd/${src_name}.min.js`, format: 'umd', name: opt.name || src_name, sourcemap: false },
+      ].filter(Boolean)}
 }
