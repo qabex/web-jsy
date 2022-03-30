@@ -14,7 +14,7 @@ const _rpis_ = (defines, ...args) => [
 
 const _cfg_ = {
   external: id => (
-       /^\w+:/.test(id)
+       /^\w*:|^\/cdn\//.test(id)
     || builtinModules.includes(id)
     ),
   plugins: _rpis_({}) }
