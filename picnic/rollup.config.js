@@ -21,7 +21,8 @@ const _cfg_ = {
 
 
 // Allow Minification -- https://github.com/TrySound/rollup-plugin-terser
-const _cfg_min_ = 'undefined'===typeof rpi_terser ? null
+let is_watch = process.argv.includes('--watch')
+const _cfg_min_ = is_watch || 'undefined'===typeof rpi_terser ? null
   : { ... _cfg_, plugins: [ ... _cfg_.plugins, rpi_terser() ]}
 
 
