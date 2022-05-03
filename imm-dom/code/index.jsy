@@ -1,0 +1,4 @@
+import {imm, html, ImmElem} from 'imm-dom'
+
+ImmElem.dom @ 'jsy-imm-sketch', (ns, el) =>
+  html.h1 @ 'Hello from jsy immdom!'
