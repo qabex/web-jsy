@@ -20,8 +20,6 @@
     "prebuild": "test -d ./node_modules || npm ci",
     "build": "rollup --config",
     "watch": "rollup --config --watch",
-    "prestart": "npm -s run build",
-    "start": "watchexec @.watchexec -w ./esm -- node --enable-source-maps ./esm/server.mjs",
     "pretest": "npm -s run build",
     "test": "true"
   }
