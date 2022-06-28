@@ -1,0 +1,100 @@
+import @{}
+    imm
+    imma
+    html as h
+    ImmElem
+    imm_dialog
+from 'imm-dom'
+
+class Sketch extends ImmElem ::
+    onServiceWorkerMessage( e ) ::
+        const { data } = e
+        const $div = this.querySelector @ 'div'
+        const $ts = h.code @ `[${ new Intl.DateTimeFormat('en-US', { dateStyle: 'short', timeStyle: 'short' }).format( Date.now() ) }] `
+
+        if data.type == 'cache_keys' ::
+            imm @ $div, h.p @#
+                $ts
+                h.strong @ `Current keys in cache (${ data.version }):`
+                h.ul @ data.keys.map @ k => h.li @ k
+        else if data.type == 'using_cached_resource' ::
+            imm @ $div, h.p @#
+                $ts
+                h.span @ `Using resource from cache: ${ data.resource }`
+
+    onServiceWorkerControllerChange( e ) ::
+        // navigator.serviceWorker.controller has changed
+        // this will happen if a service worker claims
+        // clients in the background
+        console.log @ '[CLI] Controller changed.'
+        this.getServiceWorkerInfo @ navigator.serviceWorker.controller
+
+    setupUpdateFlow( serviceWorker, registration ) ::
+        registration.addEventListener @ 'updatefound', e => ::
+            const { installing } = registration
+
+            installing.addEventListener @ 'statechange', @=>> ::
+                const { state } = installing
+
+                if state == 'installed' ::
+                    // let the user decide if they want to go ahead with the refresh
+                    await imm_dialog.showModal @ document.body, h.div @#
+                        h.p @#
+                            h.strong @ 'Application is ready to update!'
+                            h.p @ 'Updating will reload the application.'
+                        h.span @: style: 'display: flex; justify-content: space-between;', $: @#
+                            h.button @:
+                                click: e => imm_dialog.emit @ e
+                                $: 'Not right now.'
+                            h.button @:
+                                click: @=> window.location.reload()
+                                $: 'Update and reload!'
+
+    getServiceWorkerInfo( controller ) ::
+        // stand-in for init type logic when controller is first available
+        controller.postMessage @: type: 'list_cache_keys'
+
+    async loadServiceWorker() ::
+        const { serviceWorker } = navigator
+        // register the actual service worker file
+        // file name should always stay the same
+        // can pass in some query string parameters for config
+        const registration = await serviceWorker.register @ 'sw.js?force&clean'
+
+        // set up message handler and send our first message!
+        console.log @ `[CLI] Service worker registered with scope ${ registration.scope }.`
+        serviceWorker.onmessage = this.onServiceWorkerMessage.bind @ this
+        serviceWorker.oncontrollerchange = this.onServiceWorkerControllerChange.bind @ this
+
+        // on first time install, navigator.serviceWorker.controller is null.
+        // the page must be reloaded first; however, the controllerchange event
+        // will be fired from the service worker if it claims this client before
+        // that happens
+        if serviceWorker.controller :: this.getServiceWorkerInfo @ serviceWorker.controller
+
+        // when the service worker code updates (dom does a byte-for-byte comparison)
+        this.setupUpdateFlow @ serviceWorker, registration
+
+        return h.button @:
+            click: e => this.handleClick @ e
+            $: 'Here kitty kitty...'
+
+    handleClick( e ) ::
+        // fetch the cached resource to prove it really is cached
+        imm @ this.$img, @: src: 'https://cataas.com/c/gif'
+
+    render0() ::
+        this.$loading = h.p @ 'Loading service worker...'
+        this.$img = h.img @:
+            src: 'https://cataas.com/c/gif'
+        imma @ this.$loading, this.loadServiceWorker()
+        return true
+
+    render() ::
+        return @#
+            this.$loading
+            h.br()
+            this.$img
+            h.div()
+
+Sketch.dom @ 'jsy-imm-sketch'
