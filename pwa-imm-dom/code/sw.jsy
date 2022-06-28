@@ -1,0 +1,76 @@
+let _version = 50
+const _v = `v${ _version }`
+const _force = new URL( location ).searchParams.has @ 'force'
+const _clean = new URL( location ).searchParams.has @ 'clean'
+
+if _force :: self.skipWaiting()
+
+async function sendMessage( clientId, data ) ::
+    const client = await clients.get @ clientId
+    client && client.postMessage @ data
+
+self.addEventListener @ 'install', @\ e ::>
+    console.log @ '[SW] Install'
+    async function preCache() ::
+        // set up any initial cache items under the version number
+        // used for this instance of the service worker
+        const cache = await caches.open @ _v
+        await cache.add @ 'https://cataas.com/c/gif'
+
+    e.waitUntil @ preCache()
+
+self.addEventListener @ 'activate', @\ e ::>
+    console.log @ '[SW] Activate'
+    async function cleanup() ::
+        if _force ::
+            // service worker will take control of any uncontrolled clients
+            // which really only effects the first time installs
+            // when the page may be without a service worker yet
+            await clients.claim()
+
+        if _clean ::
+            // delete old caches
+            const keys = await caches.keys()
+            const oldCaches = keys.filter @ key => key != _v
+            await Promise.all @ oldCaches.map @ key_c => caches.delete @ key_c
+
+    e.waitUntil @ cleanup()
+ 
+self.addEventListener @ 'fetch', @\ e ::>
+    // typeof e == FetchEvent
+    const { request } = e
+
+    async function preFetch() ::
+        const cached = await caches.match @ request
+
+        if cached ::
+            // return cached resource if available
+            // and let the client know for fun
+            sendMessage @ e.clientId, @{}
+                type: 'using_cached_resource'
+                resource: cached.url
+
+            return cached
+
+        // fetch if not already cached
+        const res = await fetch @ request
+
+        // cache the fetched resource
+        //const cache = await caches.open @ _v
+        //await cache.put @ request, res.clone()
+
+        return res
+
+    e.respondWith @ preFetch()
+ 
+self.addEventListener @ 'message', @\ e ::>
+    // typeof e == ExtendableMessageEvent
+    const { data } = e
+
+    if data.type && data.type == 'list_cache_keys' ::
+        const cache = await caches.open @ _v
+
+        sendMessage @ e.source.id, @{}
+            type: 'cache_keys'
+            version: _v
+            keys: (await cache.keys()).map @ r => r.url
