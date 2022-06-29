@@ -1,0 +1,53 @@
+import {imm_html as h, ImmElem} from 'imm-dom'
+
+ImmElem.dom @ 'example-lite', ns =>
+  h.p @ 'This is my lite imm-dom example'
+
+ImmElem.elem('example-elem', ns => h.p('shadow imm-dom example'))
+
+ImmElem.dom @ 'example-again', ns =>
+  h.p @ 'Another lite imm-dom because maybe shadow'
+
+
+
+
+describe @ 'Testing with JSY and Mocha', @::
+
+  it @ 'Truth is truth', @::
+    expect(true).to.equal(true)
+
+  it @ 'One-off component DOM element test from E2E', @::
+    cy.visit('/cypress-component.html')
+    cy.viewport('iphone-x', 'landscape')
+
+    cy.mount @
+      h.p @
+        'And '
+        h.b @ "BINGO"
+        ' was his name-o'
+
+    .contains('ING')
+
+
+
+describe @ 'imm-dom and JSY', @::
+  beforeEach @::
+    cy.visit('/cypress-component.html')
+    cy.viewport('iphone-x', 'landscape')
+
+  it @ 'lite dom', @::
+    cy.mount @
+      h.example_lite()
+    .contains @ "imm"
+
+  it @ 'shadow dom', @::
+    cy.mount @
+      h.example_elem()
+    .shadow()
+    .contains @ "imm"
+
+  it @ 'lite again', @::
+    cy.mount @
+      h.example_again()
+    .contains @ "imm"
+

@@ -1,0 +1,34 @@
+
+const CY_SEL_ROOT = '[data-cy-root]'
+
+Cypress.Commands.addAll @:
+  unmount: () => @
+    cy.get(CY_SEL_ROOT).then @ cy_root =>
+      cy_root.empty() // clear container
+
+  mount: (el_component, options) => @
+    cy.get(CY_SEL_ROOT, {log: false})
+    .then @\ cy_root ::>
+      cy_root.empty() // clear container
+
+      el_component = await el_component
+      if el_component.call ::
+        el_component = await el_component()
+
+      if el_component ::
+        cy_root.append(el_component)
+
+      if false !== options?.log ::
+        Cypress.log @:
+            name: 'mount', type: 'parent'
+            message: [`onto ${CY_SEL_ROOT}`]
+            $el: el_component
+            consoleProps: () => @:
+              Yielded: el_component
+        .snapshot('mounted')
+        .end()
+
+      return cy
+        .wrap(el_component, { log: false })
+        .wait(0, { log: false })
+
