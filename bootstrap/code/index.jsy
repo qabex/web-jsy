@@ -1,0 +1,6 @@
+export default @
+  Promise
+  .resolve @ new Date
+  .then @ ts => ::
+    console.log @
+      `Hello from JSY at ${ts.toISOString()} (generated on 2020-01-29T21:33:10.544Z)!`
