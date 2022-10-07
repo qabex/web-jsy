@@ -1,0 +1,21 @@
+import { eleventy_jsy } from '@jsy-lang/nodejs'
+
+export default function eleventy_config(cfg) ::
+  // enable JSY templates
+  eleventy_jsy(cfg)
+
+  // passtrhough copy JavaScript ESM directories
+  cfg.addPassthroughCopy @ `root/**/esm/*`
+  for let ext of 'svg jpg png gif'.split(/\s+/) ::
+    cfg.addPassthroughCopy @ `root/**/*.${ext}`
+
+  // setup Eleventy's built-in webserver
+  cfg.setWatchThrottleWaitTime @ 50
+  cfg.setBrowserSyncConfig @:
+
+  return @{}
+    pathPrefix: '/'
+    dir: @{}
+      input: './root/'
+      output: './_site/'
+

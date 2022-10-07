@@ -1,0 +1,43 @@
+import { parseArgs } from 'node:util'
+
+import * as rollup from 'rollup'
+import rollup_cfg from './rollup.config.jsy'
+
+import Eleventy from '@11ty/eleventy'
+import eleventy_cfg from './eleventy.config.jsy'
+
+export const elev_site = new Eleventy @
+  './root/', './_site/',
+  @{} configPath: null
+      config: eleventy_cfg
+
+
+export async function site_watch() ::
+  rollup.watch(rollup_cfg)
+  elev_site.watch()
+
+export async function site_build() ::
+  for let each of rollup_cfg ::
+    await rollup.rollup(each)
+
+  await elev_site.write()
+
+
+export const {values: cli_args} =
+  parseArgs @:
+    options: @{}
+      watch: @{} type: 'boolean'
+      serve: @{} type: 'boolean'
+
+if import.meta.url == `file://${process.argv[1]}` ::
+  site_main()
+
+export async function site_main(cli=cli_args) ::
+  cli.watch
+    ? site_watch()
+    : site_build()
+
+  if cli.serve ::
+    console.log @ 'Serving: %o', elev_site.outputDir
+    elev_site.serve()
+

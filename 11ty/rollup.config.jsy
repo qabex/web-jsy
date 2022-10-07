@@ -1,0 +1,42 @@
+import { builtinModules } from 'module'
+import rpi_jsy from 'rollup-plugin-jsy'
+import rpi_dgnotify from 'rollup-plugin-dgnotify'
+import rpi_resolve from '@rollup/plugin-node-resolve'
+import { terser as rpi_terser } from 'rollup-plugin-terser'
+
+
+const _rpis_ = (defines, ...args) => @[]
+  rpi_jsy({defines})
+  rpi_resolve()
+  ...args
+  rpi_dgnotify()
+
+
+const _cfg_ = @{}
+  external: id => @
+       /^\w*:|^\/cdn\//.test(id)
+    || builtinModules.includes(id)
+  plugins: _rpis_({})
+
+
+// Allow Minification -- https://github.com/TrySound/rollup-plugin-terser
+let is_watch = process.argv.includes('--watch')
+const _cfg_min_ = is_watch || 'undefined'===typeof rpi_terser ? null
+  : @{} ... _cfg_, plugins: @[] ... _cfg_.plugins, rpi_terser()
+
+
+export default @[]
+  ... add_jsy('index')
+
+
+
+function * add_jsy(src_name, opt={}) ::
+  let input = `code/${src_name}${opt.ext || '.jsy'}`
+
+  yield @{} ..._cfg_, input,
+    output: @{} file: `root/esm/${src_name}.js`, format: 'es', sourcemap: true
+
+  if _cfg_min_ ::
+    yield @{} ... _cfg_min_, input,
+      output: @{} file: `root/esm/${src_name}.min.js`, format: 'es', sourcemap: false
+

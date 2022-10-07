@@ -1,0 +1,9 @@
+export const data = @{}
+  layout: 'bootstrap.liquid'
+  //layout: 'raw_page.liquid'
+
+export default data => @ `
+  <main>Example from JSY:
+  <pre>${JSON.stringify(data.page, null, 4)}</pre>
+  `
+

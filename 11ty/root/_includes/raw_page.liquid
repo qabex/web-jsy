@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<meta name=viewport content='width=device-width, initial-scale=1'>
+
+{% if title %}
+{% if site_title %}
+<title>{{title}} - {{site_title}}</title>
+{% else %}
+<title>{{title}}</title>
+{% endif %}
+{% else %}
+<title>{{site_title}}</title>
+{% endif %}
+
+{% if site_icon %}
+  <link rel=icon href='{{site_icon}}' />
+{% else %}
+  <link rel=icon href='data:image/png;base64,' />
+{% endif %}
+
+{% for each in head_cdn.styles %}<link rel=stylesheet type=text/css href='{{each.href}}' crossorigin=anonymous integrity='{{each.integrity}}' />{% endfor %}
+{% for each in head_site.styles %}<link rel=stylesheet type=text/css href='{{each.href}}' />{% endfor %}
+{% for each in head_local.styles %}<link rel=stylesheet type=text/css href='{{each.href | url}}' />{% endfor %}
+
+{% for each in head_cdn.js %}<script src='{{each.src}}' {{each.opt}} crossorigin=anonymous integrity='{{each.integrity}}'></script>{% endfor %}
+{% for each in head_site.js %}<script src='{{each.src}}' {{each.opt}}></script>{% endfor %}
+{% for each in head_local.js %}<script src='{{each.src}}' {{each.opt}}></script>{% endfor %}
+
+{% for each in head_cdn.esm %}<script type=module src='{{each.src}}' {{each.opt}} crossorigin=anonymous integrity='{{each.integrity}}'></script>{% endfor %}
+{% for each in head_site.esm %}<script type=module src='{{each.src}}' {{each.opt}}></script>{% endfor %}
+{% for each in head_local.esm %}<script type=module src='{{each.src}}' {{each.opt}}></script>{% endfor %}
+</head>
+
+<body>
+{{ content }}
+
+{% for each in tail_cdn.js %}<script src='{{each.src}}' {{each.opt}} crossorigin=anonymous integrity='{{each.integrity}}'></script>{% endfor %}
+{% for each in tail_site.js %}<script src='{{each.src}}' {{each.opt}}></script>{% endfor %}
+{% for each in tail_local.js %}<script src='{{each.src}}' {{each.opt}}></script>{% endfor %}
+
+{% for each in tail_cdn.esm %}<script type=module src='{{each.src}}' {{each.opt}} crossorigin=anonymous integrity='{{each.integrity}}'></script>{% endfor %}
+{% for each in tail_site.esm %}<script type=module src='{{each.src}}' {{each.opt}}></script>{% endfor %}
+{% for each in tail_local.esm %}<script type=module src='{{each.src}}' {{each.opt}}></script>{% endfor %}
+
+{% if qsrv.watch %}
+<!--script defer src='!~/livereload.js'></script-->
+{% endif %}
+
