@@ -1,0 +1,90 @@
+import { parseArgs } from 'node:util'
+import { resolve as path_resolve } from 'node:path'
+import { eleventy_jsy } from '@jsy-lang/nodejs'
+import Eleventy from '@11ty/eleventy'
+import epi_vite from '@11ty/eleventy-plugin-vite'
+import rpi_jsy from 'rollup-plugin-jsy'
+import rpi_dgnotify from 'rollup-plugin-dgnotify'
+
+
+export const site_cfg = @{}
+  cli: parseArgs @: strict: false
+  get cli_opt() :: return this.cli.values
+
+
+  async main() ::
+    let cfg_11ty =
+      new Eleventy @ 'root/', '_site/', @{}
+        config: cfg => this.eleventy_config(cfg)
+
+    if this.cli_opt.watch ::
+      cfg_11ty.watch()
+    else ::
+      await cfg_11ty.write()
+
+    if this.cli_opt.serve ::
+      cfg_11ty.serve()
+
+
+
+  filter_fns: @{}
+    vite_url(relpath) ::
+      let uin = new URL(this.page.inputPath, 'file://')
+      return new URL(relpath, uin).pathname
+
+  async eleventy_config(cfg) ::
+    eleventy_jsy(cfg)
+
+    for let [name, fn] of Object.entries @ this.filter_fns ::
+      cfg.addFilter @ name, fn
+
+    // include APP folder in the watch triggers
+    cfg.addWatchTarget @ 'code/**'
+    cfg.addWatchTarget @ 'root/**/*.jsy'
+
+    await this.eleventy_devserver(cfg)
+
+    // https://www.11ty.dev/docs/server-vite/
+    cfg.addPlugin @ epi_vite, @{}
+      viteOptions: await this.vite_config(cfg)
+
+
+    for let ext of 'css pdf svg jpg png gif'.split(/\s+/) ::
+      cfg.addPassthroughCopy @ `root/**/*.${ext}`
+
+    return @{}
+      pathPrefix: '/'
+
+
+  async eleventy_devserver(cfg) ::
+    // https://www.11ty.dev/docs/watch-serve/
+    cfg.setWatchThrottleWaitTime(50)
+    cfg.setServerPassthroughCopyBehavior('passthrough')
+
+    return cfg.setServerOptions @:
+      port: 8080, strictPort: true
+      domDiff: false
+
+
+  async vite_config() ::
+    return @{}
+      mode: this.cli_opt.serve
+        ? 'development' : 'production'
+
+      plugins: @[]
+        rpi_dgnotify()
+        rpi_jsy @:
+          defines: @{}
+
+      resolve: @{}
+        alias: @{}
+          // use /root for in-tree glue code with Vite passthrough
+          '/root': path_resolve('./root/')
+          // use app:/ prefix for named locations in code subdirectory with Vite passthrough
+          'app:': path_resolve('./code/app/')
+
+
+
+if import.meta.url == `file://${process.argv[1]}` ::
+  site_cfg.main()
+

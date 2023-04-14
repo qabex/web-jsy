@@ -3,7 +3,7 @@ layout: bootstrap_md.liquid
 title: Bootstrap and JSY
 tail_local:
   esm:
-  - src: ./example_in_page_script.jsy
+  - src: ./esm/index.js
 ---
 
 # JSY + Eleventy + Bootstrap 5.2
@@ -13,4 +13,4 @@ tail_local:
 - [Bootstrap 5.2](https://getbootstrap.com/docs/5.2/getting-started/introduction/)
 
 ### Using `.11ty.jsy`
-[jsy_page.11ty.jsy](./jsy_page/)
+[example.11ty.jsy](./example/)

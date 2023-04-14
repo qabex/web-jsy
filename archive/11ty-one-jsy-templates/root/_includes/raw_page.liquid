@@ -26,11 +26,11 @@
 
 {% for each in head_cdn.js %}<script src='{{each.src}}' {{each.opt}} crossorigin=anonymous integrity='{{each.integrity}}'></script>{% endfor %}
 {% for each in head_site.js %}<script src='{{each.src}}' {{each.opt}}></script>{% endfor %}
-{% for each in head_local.js %}<script src='{{each.src | vite_url}}' {{each.opt}}></script>{% endfor %}
+{% for each in head_local.js %}<script src='{{each.src}}' {{each.opt}}></script>{% endfor %}
 
 {% for each in head_cdn.esm %}<script type=module src='{{each.src}}' {{each.opt}} crossorigin=anonymous integrity='{{each.integrity}}'></script>{% endfor %}
 {% for each in head_site.esm %}<script type=module src='{{each.src}}' {{each.opt}}></script>{% endfor %}
-{% for each in head_local.esm %}<script type=module src='{{each.src | vite_url}}' {{each.opt}}></script>{% endfor %}
+{% for each in head_local.esm %}<script type=module src='{{each.src}}' {{each.opt}}></script>{% endfor %}
 </head>
 
 <body>
@@ -38,9 +38,13 @@
 
 {% for each in tail_cdn.js %}<script src='{{each.src}}' {{each.opt}} crossorigin=anonymous integrity='{{each.integrity}}'></script>{% endfor %}
 {% for each in tail_site.js %}<script src='{{each.src}}' {{each.opt}}></script>{% endfor %}
-{% for each in tail_local.js %}<script src='{{each.src | vite_url}}' {{each.opt}}></script>{% endfor %}
+{% for each in tail_local.js %}<script src='{{each.src}}' {{each.opt}}></script>{% endfor %}
 
 {% for each in tail_cdn.esm %}<script type=module src='{{each.src}}' {{each.opt}} crossorigin=anonymous integrity='{{each.integrity}}'></script>{% endfor %}
 {% for each in tail_site.esm %}<script type=module src='{{each.src}}' {{each.opt}}></script>{% endfor %}
-{% for each in tail_local.esm %}<script type=module src='{{each.src | vite_url}}' {{each.opt}}></script>{% endfor %}
+{% for each in tail_local.esm %}<script type=module src='{{each.src}}' {{each.opt}}></script>{% endfor %}
+
+{% if qsrv.watch %}
+<!--script defer src='!~/livereload.js'></script-->
+{% endif %}
 

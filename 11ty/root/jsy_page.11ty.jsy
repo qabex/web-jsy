@@ -1,0 +1,13 @@
+export const data = @{}
+  layout: 'bootstrap.liquid'
+  //layout: 'raw_page.liquid'
+
+export default data => @ `
+  <main>Example from JSY:
+  <pre>${JSON.stringify(data.page, null, 4)}</pre>
+  <script type=module>
+    import {zenify} from 'app:/example_zenify.jsy'
+    zenify('jsy_page.11ty.jsy')
+  </script>
+  `
+

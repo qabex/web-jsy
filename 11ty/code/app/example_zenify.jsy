@@ -1,0 +1,9 @@
+export const sleep = (ms=100) =>
+  new Promise @ done => setTimeout(done, ms)
+
+export async function zenify(label, ms=200) ::
+  let ts0 = Date.now()
+  for let count=5; count>=0; count-- ::
+    await sleep(ms)
+    console.log @ 'TICK: %o n:%o ts:%o', label, count, (Date.now()-ts0)*1e-3
+

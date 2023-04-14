@@ -1,0 +1,7 @@
+import {zenify} from 'app:/example_zenify.jsy'
+
+console.log @:
+  JSY: `is wonderful! ${new Date().toLocaleString()}`
+  zenify
+
+zenify('example_in_page_script.jsy')
