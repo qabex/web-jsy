@@ -58,30 +58,36 @@ export const site_cfg = @{}
 
   async eleventy_devserver(cfg) ::
     // https://www.11ty.dev/docs/watch-serve/
-    cfg.setWatchThrottleWaitTime(50)
+    cfg.setWatchThrottleWaitTime(90)
     cfg.setServerPassthroughCopyBehavior('passthrough')
 
+    // https://www.11ty.dev/docs/dev-server/
     return cfg.setServerOptions @:
-      port: 8080, strictPort: true
+      //port: 8080, strictPort: true
       domDiff: false
 
 
   async vite_config() ::
     return @{}
+      appType: 'mpa'
       mode: this.cli_opt.serve
         ? 'development' : 'production'
 
+      publicDir: path_resolve('./public')
       plugins: @[]
         rpi_dgnotify()
         rpi_jsy @:
           defines: @{}
 
+      css: @{}
+        devSourcemap: true
+
       resolve: @{}
         alias: @{}
           // use /root for in-tree glue code with Vite passthrough
           '/root': path_resolve('./root/')
-          // use app:/ prefix for named locations in code subdirectory with Vite passthrough
-          'app:': path_resolve('./code/app/')
+          // use '@/' prefix for named locations in code subdirectory with Vite passthrough
+          '@': path_resolve('./code/')
 
 
 

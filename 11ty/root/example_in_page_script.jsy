@@ -1,4 +1,4 @@
-import {zenify} from 'app:/example_zenify.jsy'
+import {zenify} from '@/app/example_zenify.jsy'
 
 console.log @:
   JSY: `is wonderful! ${new Date().toLocaleString()}`

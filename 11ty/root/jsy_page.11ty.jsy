@@ -1,12 +1,17 @@
 export const data = @{}
-  layout: 'bootstrap.liquid'
-  //layout: 'raw_page.liquid'
+  layout: 'bootstrap_md.liquid'
 
-export default data => @ `
-  <main>Example from JSY:
-  <pre>${JSON.stringify(data.page, null, 4)}</pre>
+export const render = data => @ `
+  <h4>Example from <kbd>.11ty.jsy</kbd></h4>
+  At build time
+  <pre><code>${
+    JSON.stringify @ data.page, null, 4
+  }</code></pre>
+
+  <h4>JSY+Vite inline</h4>
+  See console for output
   <script type=module>
-    import {zenify} from 'app:/example_zenify.jsy'
+    import {zenify} from '@/app/example_zenify.jsy'
     zenify('jsy_page.11ty.jsy')
   </script>
   `
